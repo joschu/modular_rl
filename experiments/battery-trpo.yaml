@@ -1,0 +1,60 @@
+
+default_settings:
+    snapshot_every: 20
+    max_pathlength: 0
+
+
+n_runs: 3
+
+tests:
+
+    cartpole:
+        env: CartPole
+        timesteps_per_batch: 10000
+    mountaincar:
+        env: MountainCar
+        timesteps_per_batch: 10000
+    swimmer:
+        env: Swimmer
+        timesteps_per_batch: 10000
+    acrobot:
+        env: Acrobot
+        timesteps_per_batch: 10000
+    reacher:
+        env: Reacher
+        timesteps_per_batch: 20000
+    ip:
+        env: InvertedPendulum
+        timesteps_per_batch: 5000
+    idp:
+        env: InvertedDoublePendulum
+        timesteps_per_batch: 25000
+    hc:
+        env: HalfCheetah
+        timesteps_per_batch: 25000
+    hopper:
+        env: Hopper
+        timesteps_per_batch: 25000
+    mjcswimmer:
+        env: MujocoSwimmer
+        timesteps_per_batch: 25000
+    walker:
+        env: Walker2d
+        timesteps_per_batch: 25000
+    ant:
+        env: Ant
+        timesteps_per_batch: 50000
+    humanoid:
+        env: Humanoid
+        timesteps_per_batch: 50000
+
+cfgs:
+    trpo:
+        command: 'export THEANO_FLAGS=floatX=float64 ; python run_pg.py'        
+        n_iter: 200
+        gamma: 0.995
+        lam: 0.97
+        agent: agentzoo.TrpoAgent
+        max_kl: 0.01
+        cg_damping: 0.1
+        parallel: 0

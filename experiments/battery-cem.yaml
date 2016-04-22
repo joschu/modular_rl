@@ -1,0 +1,46 @@
+
+default_settings:
+    snapshot_every: 20
+    max_pathlength: 0
+
+
+n_runs: 3
+
+tests:
+    cartpole:
+        env: CartPole
+    mountaincar:
+        env: MountainCar
+    swimmer:
+        env: Swimmer
+    acrobot:
+        env: Acrobot
+    reacher:
+        env: Reacher
+    ip:
+        env: InvertedPendulum
+    idp:
+        env: InvertedDoublePendulum
+    mjcswimmer:
+        env: MujocoSwimmer
+    hc:
+        env: HalfCheetah
+    hopper:
+        env: Hopper
+    walker:
+        env: Walker2d
+    ant:
+        env: Ant
+    humanoid:
+        env: Humanoid
+
+cfgs:
+    cem10-5:
+        command: python run_cem.py
+        n_iter: 300
+        hid_sizes: 10,5
+        parallel: 1
+        agent: agentzoo.DeterministicAgent
+        extra_std: 0.01
+        batch_size: 200
+

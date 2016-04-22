@@ -1,0 +1,11 @@
++ .
+- ./mi_hrl.py
+- ./john_utils2.py
+- ./mi_hrl2.py
+- ./test_misc.py
+- ./tutorial
+- ./old
+- ./hrl
+- ./vae
+- ./johnlib/tf_utils.py
+- ./bayesnn

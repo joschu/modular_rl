@@ -1,6 +1,5 @@
 import multiprocessing
 import sys
-# from joblib.pool import MemmapingPool
 
 class G: #pylint: disable=W0232
     pass

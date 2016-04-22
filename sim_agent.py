@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""
+Load a snapshotted agent from an hdf5 file and animate it's behavior
+"""
+
 import argparse
 import cPickle, h5py, numpy as np, time
 from collections import defaultdict

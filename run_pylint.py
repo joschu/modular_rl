@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-# A script that runs pylint on the files in this project.
+"""
+This script runs pylint on this project
+"""
 
 
 import argparse

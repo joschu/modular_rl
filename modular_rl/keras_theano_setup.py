@@ -1,9 +1,11 @@
 import copy_reg, cPickle
-import theano, keras
+import theano, keras, keras.backend
 
 floatX = theano.config.floatX #pylint: disable=E1101
 keras.backend.set_floatx(floatX)
 keras.backend.set_epsilon(1e-7)
+
+FNOPTS = dict(allow_input_downcast=True, on_unused_input='ignore')        
 
 from keras.models import Sequential, model_from_json
 

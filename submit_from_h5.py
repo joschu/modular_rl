@@ -6,7 +6,7 @@ from rl_gym import scoreboard
 
 parser = argparse.ArgumentParser()
 parser.add_argument("hdf")
-parser.add_argument("--maxlik", type=int, default=1)
+parser.add_argument("--maxprob", type=int, default=1)
 args = parser.parse_args()
 
 hdf = h5py.File(args.hdf,'r')
@@ -20,7 +20,7 @@ env_id = hdf["env_id"].value
 print env_id
 
 agent_name = "TRPO"
-if args.maxlik: agent_name += "-maxlik"
+if args.maxprob: agent_name += "-maxprob"
 
 class AgentWithFilter(object):
     def __init__(self, agent, obfilt):
@@ -28,7 +28,7 @@ class AgentWithFilter(object):
         self.obfilt = obfilt
     def act(self, o):
         a, info = self.agent.act(self.obfilt(o))
-        if args.maxlik:            
+        if args.maxprob:            
             p = info['prob']
             if a.dtype.kind=='i':
                 return p.argmax(), info

@@ -40,7 +40,7 @@ cfgs:
         n_iter: 300
         hid_sizes: 10,5
         parallel: 1
-        agent: agentzoo.DeterministicAgent
+        agent: modular_rl.agentzoo.DeterministicAgent
         extra_std: 0.01
         batch_size: 200
 

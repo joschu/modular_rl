@@ -1,8 +1,12 @@
 #!/usr/bin/env python
+"""
+This script runs a policy gradient algorithm
+"""
+
 
 from rl_gym.envs import make
 from modular_rl import *
-import argparse, sys
+import argparse, sys, cPickle
 from tabulate import tabulate
 import shutil, os
 
@@ -16,6 +20,7 @@ if __name__ == "__main__":
     env, env_spec = make(args.env)
     mondir = args.outfile+".mondir"
     if os.path.exists(mondir): shutil.rmtree(mondir)
+    os.mkdir(mondir)
     env.monitor.start(mondir)
     env = FilteredEnv(env, ZFilter(env.observation_space.shape, clip=5), ZFilter((), demean=False, clip=10))
     agent_ctor = get_agent_cls(args.agent)
@@ -23,8 +28,8 @@ if __name__ == "__main__":
     update_argument_parser(parser, PG_OPTIONS)
     args = parser.parse_args()
     cfg = args.__dict__
-    agent = agent_ctor(env.observation_space, env.action_space, cfg)
     np.random.seed(args.seed)
+    agent = agent_ctor(env.observation_space, env.action_space, cfg)
     hdf, diagnostics = prepare_h5_file(args)
 
     if args.max_pathlength == 0: 

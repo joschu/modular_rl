@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+This script runs the cross-entropy method
+"""
 
 from rl_gym.envs import make
 from modular_rl import *

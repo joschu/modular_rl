@@ -50,11 +50,13 @@ tests:
 
 cfgs:
     trpo:
-        command: 'export THEANO_FLAGS=floatX=float64 ; python run_pg.py'        
+        command: 'export THEANO_FLAGS=floatX=float64 ; python run_pg.py' 
+        # float64 probably isn't necessary, but I was having numerical problems at one point
+        # it doesn't slow things down much       
         n_iter: 200
         gamma: 0.995
         lam: 0.97
-        agent: agentzoo.TrpoAgent
+        agent: modular_rl.agentzoo.TrpoAgent
         max_kl: 0.01
         cg_damping: 0.1
         parallel: 0

@@ -1,8 +1,16 @@
+"""
+In this codebase, the "Agent" is a container with the policy, value function, etc.
+This file contains a bunch of agents
+"""
+
+
 from modular_rl import *
 from rl_gym.spaces import Box, Discrete
 from collections import OrderedDict
 from keras.models import Sequential
 from keras.layers.core import Dense
+from modular_rl.trpo import TrpoUpdater
+from modular_rl.ppo import PpoLbfgsUpdater, PpoSgdUpdater
 
 MLP_OPTIONS = [("hid_sizes", comma_sep_ints, [64,64], "Sizes of hidden layers of MLP")]
 

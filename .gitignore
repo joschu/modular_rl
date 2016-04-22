@@ -20,3 +20,5 @@ logs/
 
 .ipynb_checkpoints
 ghostdriver.log
+
+htmlcov

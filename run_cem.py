@@ -5,7 +5,7 @@ This script runs the cross-entropy method
 
 from gym.envs import make
 from modular_rl import *
-import argparse, sys, cPickle
+import argparse, sys, cPickle, shutil
 
 from tabulate import tabulate
 
@@ -16,7 +16,12 @@ if __name__ == "__main__":
     parser.add_argument("--agent",required=True)
     parser.add_argument("--plot",action="store_true")
     args,_ = parser.parse_known_args([arg for arg in sys.argv[1:] if arg not in ('-h', '--help')])
-    env, env_spec = make(args.env)
+    env = make(args.env)
+    env_spec = env.spec
+    mondir = args.outfile + ".dir"
+    if os.path.exists(mondir): shutil.rmtree(mondir)
+    os.mkdir(mondir)
+    env.monitor.start(mondir, "TRPO")
     env = FilteredEnv(env, ZFilter(env.observation_space.shape, clip=5), ZFilter((), demean=False, clip=10))
     agent_ctor = get_agent_cls(args.agent)
     update_argument_parser(parser, agent_ctor.options)
@@ -48,3 +53,4 @@ if __name__ == "__main__":
     hdf['ob_filter'] = np.array(cPickle.dumps(env.ob_filter, -1))
     try: hdf['env'] = np.array(cPickle.dumps(env, -1))
     except Exception: print "failed to pickle env" #pylint: disable=W0703
+    env.monitor.close()

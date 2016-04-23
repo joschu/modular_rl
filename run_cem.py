@@ -3,7 +3,7 @@
 This script runs the cross-entropy method
 """
 
-from rl_gym.envs import make
+from gym.envs import make
 from modular_rl import *
 import argparse, sys, cPickle
 

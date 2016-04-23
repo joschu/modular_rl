@@ -5,7 +5,7 @@ This file contains a bunch of agents
 
 
 from modular_rl import *
-from rl_gym.spaces import Box, Discrete
+from gym.spaces import Box, Discrete
 from collections import OrderedDict
 from keras.models import Sequential
 from keras.layers.core import Dense

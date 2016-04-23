@@ -1,4 +1,4 @@
-from rl_gym import Env, spaces
+from gym import Env, spaces
 import numpy as np
 
 class FilteredEnv(Env): #pylint: disable=W0223
@@ -9,8 +9,8 @@ class FilteredEnv(Env): #pylint: disable=W0223
 
         ob_space = self.env.observation_space
         shape = self.ob_filter.output_shape(ob_space)
-        self._observation_space = spaces.Box(-np.inf, np.inf, shape)
-        self._action_space = self.env.action_space
+        self.observation_space = spaces.Box(-np.inf, np.inf, shape)
+        self.action_space = self.env.action_space
 
     def _step(self, ac):
         ob, rew, done, info = self.env.step(ac)

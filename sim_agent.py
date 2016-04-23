@@ -6,7 +6,7 @@ Load a snapshotted agent from an hdf5 file and animate it's behavior
 import argparse
 import cPickle, h5py, numpy as np, time
 from collections import defaultdict
-import rl_gym
+import gym
 
 def animate_rollout(env, agent, n_timesteps,delay=.01):
     infos = defaultdict(list)
@@ -46,13 +46,13 @@ def main():
     else: 
         snapname = args.snapname
 
-    _, spec = rl_gym.make(hdf["env_id"].value)
+    env = gym.make(hdf["env_id"].value)
 
     agent = cPickle.loads(hdf['agent_snapshots'][snapname].value)
     agent.stochastic=False
     env = cPickle.loads(hdf['env'].value)
 
-    max_pathlength = args.max_pathlength or spec.timestep_limit
+    max_pathlength = args.max_pathlength or env.spec.timestep_limit
 
     while True:
         infos = animate_rollout(env,agent,n_timesteps=max_pathlength, 

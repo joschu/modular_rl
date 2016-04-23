@@ -20,12 +20,12 @@ tests:
     acrobot:
         env: Acrobot
         timesteps_per_batch: 10000
-    reacher:
-        env: Reacher
-        timesteps_per_batch: 20000
     ip:
         env: InvertedPendulum
         timesteps_per_batch: 5000
+    reacher:
+        env: Reacher
+        timesteps_per_batch: 20000
     idp:
         env: InvertedDoublePendulum
         timesteps_per_batch: 25000

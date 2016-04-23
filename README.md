@@ -7,7 +7,7 @@ This repository implements several algorithms:
 TRPO and PPO are implemented with neural-network value functions and use GAE [2].
 
 
-It is written in a modular way to allow for sharing code between TRPO and PPO variants, and to write the same code for different kinds of action spaces.
+This library is written in a modular way to allow for sharing code between TRPO and PPO variants, and to write the same code for different kinds of action spaces.
 
 Dependencies:
 
@@ -24,11 +24,11 @@ Good parameter settings can be found in the `experiments` directory.
 
 You can learn about the various parameters by running one of the experiment scripts with the `-h` flag, but providing the (required) `env` and `agent` parameters. (Those parameters determine what other parameters are available.) For example, to see the parameters of TRPO,
 
-    ./run_pg.py --env CartPole --agent modular_rl.agentzoo.TrpoAgent -h
+    ./run_pg.py --env CartPole-v0 --agent modular_rl.agentzoo.TrpoAgent -h
 
 To the the parameters of CEM,
 
-    ./run_cem.py --env=Acrobot --agent=modular_rl.agentzoo.DeterministicAgent  --n_iter=2
+    ./run_cem.py --env=Acrobot-v0 --agent=modular_rl.agentzoo.DeterministicAgent  --n_iter=2
 
 
 [1] JS, S Levine, P Moritz, M Jordan, P Abbeel, "Trust region policy optimization." arXiv preprint arXiv:1502.05477 (2015).

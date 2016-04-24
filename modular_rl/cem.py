@@ -1,4 +1,4 @@
-from modular_rl import *
+from .core import *
 from . import parallel_utils
 from tabulate import tabulate
 import os
@@ -39,10 +39,8 @@ def cem(f,th_mean,batch_size,n_iter,elite_frac, initial_std=1.0, extra_std=0.0, 
         sample_std = np.sqrt(th_std + np.square(extra_std) * extra_var_multiplier)
 
         ths = np.array([th_mean + dth for dth in  sample_std[None,:]*np.random.randn(batch_size, th_mean.size)])
-        if pool is None:
-            ys = np.array([f(th) for th in ths])
-        else:
-            ys = np.array(pool.map(f, ths))
+        if pool is None: ys = np.array(map(f, ths))
+        else: ys = np.array(pool.map(f, ths))
         assert ys.ndim==1
         elite_inds = ys.argsort()[-n_elite:]
         elite_ths = ths[elite_inds]
@@ -58,17 +56,17 @@ CEM_OPTIONS = [
     ("initial_std", float, 1.0, "initial standard deviation for parameters"),
     ("extra_std", float, 0.0, "extra stdev added"),
     ("std_decay_time", float, -1.0, "number of timesteps that extra stdev decays over. negative => n_iter/2"),
-    ("max_pathlength", int, 0, "maximum length of trajectories"),
+    ("timestep_limit", int, 0, "maximum length of trajectories"),
     ("parallel", int, 0, "collect trajectories in parallel"),
 ]
 
-def _cem_f(th):
+def _cem_objective(th):
     G = parallel_utils.G
     G.agent.set_from_flat(th)
-    path = rollout(G.env, G.agent, G.max_pathlength)
+    path = rollout(G.env, G.agent, G.timestep_limit)
     return path["reward"].sum()
 
-def _seed_with_pid(_G):
+def _seed_with_pid():
     np.random.seed(os.getpid())
 
 def run_cem_algorithm(env, agent, usercfg=None, callback=None):
@@ -80,17 +78,16 @@ def run_cem_algorithm(env, agent, usercfg=None, callback=None):
     G = parallel_utils.G
     G.env = env
     G.agent = agent
-    G.max_pathlength = cfg["max_pathlength"]
+    G.timestep_limit = cfg["timestep_limit"]
     if cfg["parallel"]:
         parallel_utils.init_pool()
-        parallel_utils.apply_each(_seed_with_pid)
         pool = G.pool
     else:
         pool = None
 
     th_mean = agent.get_flat()
 
-    for info in cem(_cem_f, th_mean, cfg["batch_size"], cfg["n_iter"], cfg["elite_frac"], 
+    for info in cem(_cem_objective, th_mean, cfg["batch_size"], cfg["n_iter"], cfg["elite_frac"], 
         cfg["initial_std"], cfg["extra_std"], cfg["std_decay_time"], pool=pool):
         callback(info)
         ps = np.linspace(0,100,5)

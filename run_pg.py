@@ -22,19 +22,16 @@ if __name__ == "__main__":
     mondir = args.outfile + ".dir"
     if os.path.exists(mondir): shutil.rmtree(mondir)
     os.mkdir(mondir)
-    env.monitor.start(mondir, "TRPO")
-    env = FilteredEnv(env, ZFilter(env.observation_space.shape, clip=5), ZFilter((), demean=False, clip=10))
+    env.monitor.start(mondir, "TRPO", video=True)
     agent_ctor = get_agent_cls(args.agent)
     update_argument_parser(parser, agent_ctor.options)
-    update_argument_parser(parser, PG_OPTIONS)
     args = parser.parse_args()
+    if args.timestep_limit == 0: 
+        args.timestep_limit = env_spec.timestep_limit    
     cfg = args.__dict__
     np.random.seed(args.seed)
     agent = agent_ctor(env.observation_space, env.action_space, cfg)
     hdf, diagnostics = prepare_h5_file(args)
-
-    if args.max_pathlength == 0: 
-        args.max_pathlength = env_spec.timestep_limit
 
     COUNTER = 0
     def callback(stats):
@@ -46,17 +43,15 @@ if __name__ == "__main__":
                 assert val.ndim == 1
                 diagnostics[stat].extend(val)
         if args.plot:
-            animate_rollout(env, agent, min(500, args.max_pathlength))
+            animate_rollout(env, agent, min(500, args.timestep_limit))
         print "*********** Iteration %i ****************" % COUNTER
         print tabulate(filter(lambda (k,v) : np.asarray(v).size==1, stats.items())) #pylint: disable=W0110
         COUNTER += 1
         if args.snapshot_every and ((COUNTER % args.snapshot_every==0) or (COUNTER==args.n_iter)): 
             hdf['/agent_snapshots/%0.4i'%COUNTER] = np.array(cPickle.dumps(agent,-1))
-    run_policy_gradient_algorithm(env, agent.policy, agent.updater, agent.baseline, 
-        callback=callback, usercfg = cfg)
+    run_policy_gradient_algorithm(env, agent, callback=callback, usercfg = cfg)
 
     hdf['env_id'] = env_spec.id
-    hdf['ob_filter'] = np.array(cPickle.dumps(env.ob_filter, -1))
     try: hdf['env'] = np.array(cPickle.dumps(env, -1))
-    except Exception: print "failed to pickle env"
+    except Exception: print "failed to pickle env" #pylint: disable=W0703
     env.monitor.close()

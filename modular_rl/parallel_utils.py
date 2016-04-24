@@ -40,11 +40,11 @@ def worker_run_task_blocked(all_args):
     G.worker_queue.put(None)
     # wait for the master to signal continuation
     G.queue.get()
-    return f(G, *args, **kwargs)
+    return f(*args, **kwargs)
 
 def worker_run_task(all_args):
     f, args, kwargs = all_args
-    return f(G, *args, **kwargs)
+    return f(*args, **kwargs)
 
 def apply_each(f, *args, **kwargs):
     """

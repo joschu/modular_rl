@@ -23,7 +23,7 @@ def get_agent_cls(name):
 # Stats 
 # ================================================================
 
-def add_episode_stats(stats, paths, state):
+def add_episode_stats(stats, paths):
     reward_key = "reward_raw" if "reward_raw" in paths[0] else "reward"
     episoderewards = np.array([path[reward_key].sum() for path in paths])
     pathlengths = np.array([pathlength(path) for path in paths])
@@ -37,7 +37,6 @@ def add_episode_stats(stats, paths, state):
     stats["EpLenMean"] = pathlengths.mean()
     stats["EpLenMax"] = pathlengths.max()
     stats["RewPerStep"] = episoderewards.sum()/pathlengths.sum()
-    stats["TimeElapsed"] = time.time() - state["tstart"]
 
 def add_prefixed_stats(stats, prefix, d):
     for (k,v) in d.iteritems():
@@ -65,7 +64,7 @@ def compute_advantage(vf, paths, gamma, lam):
 
 
 PG_OPTIONS = [
-    ("max_pathlength", int, 0, "maximum length of trajectories"),
+    ("timestep_limit", int, 0, "maximum length of trajectories"),
     ("n_iter", int, 200, "number of batch"),
     ("parallel", int, 0, "collect trajectories in parallel"),
     ("timesteps_per_batch", int, 10000, ""),
@@ -73,7 +72,7 @@ PG_OPTIONS = [
     ("lam", float, 1.0, "lambda parameter from generalized advantage estimation"),
 ]
 
-def run_policy_gradient_algorithm(env, policy, pol_updater, vf, usercfg=None, callback=None):
+def run_policy_gradient_algorithm(env, agent, usercfg=None, callback=None):
     cfg = update_default_config(PG_OPTIONS, usercfg)
     cfg.update(usercfg)
     print "policy gradient config", cfg
@@ -81,41 +80,43 @@ def run_policy_gradient_algorithm(env, policy, pol_updater, vf, usercfg=None, ca
     if cfg["parallel"]:
         raise NotImplementedError
 
-    state = {"tstart" : time.time()}
+    tstart = time.time()
+    seed_iter = itertools.count()
+
     for _ in xrange(cfg["n_iter"]):
         # Rollouts ========
-        paths = get_paths(env, policy, cfg, state)
-        compute_advantage(vf, paths, gamma=cfg["gamma"], lam=cfg["lam"])
+        paths = get_paths(env, agent, cfg, seed_iter)
+        compute_advantage(agent.baseline, paths, gamma=cfg["gamma"], lam=cfg["lam"])
         # VF Update ========
-        vf_stats = vf.fit(paths)
+        vf_stats = agent.baseline.fit(paths)
         # Pol Update ========
-        pol_stats = pol_updater(paths)
+        pol_stats = agent.updater(paths)
         # Stats ========
         stats = OrderedDict()
-        add_episode_stats(stats, paths, state)
+        add_episode_stats(stats, paths)
         add_prefixed_stats(stats, "vf", vf_stats)
         add_prefixed_stats(stats, "pol", pol_stats)
+        stats["TimeElapsed"] = time.time() - tstart
         if callback: callback(stats)
 
-def get_paths(env, agent, cfg, state):
-    if "seed_iter" not in state:
-        state["seed_iter"] = itertools.count()
+def get_paths(env, agent, cfg, seed_iter):
     if cfg["parallel"]:
         raise NotImplementedError
     else:
-        paths = do_rollouts_serial(env, agent, cfg["max_pathlength"], cfg["timesteps_per_batch"], state["seed_iter"])
+        paths = do_rollouts_serial(env, agent, cfg["timestep_limit"], cfg["timesteps_per_batch"], seed_iter)
     return paths
 
 
-def rollout(env, agent, max_pathlength):
+def rollout(env, agent, timestep_limit):
     """
-    Simulate the env and agent for max_pathlength steps
+    Simulate the env and agent for timestep_limit steps
     """
     ob = env.reset()
     terminated = False
 
     data = defaultdict(list)
-    for _ in xrange(max_pathlength):
+    for _ in xrange(timestep_limit):
+        ob = agent.obfilt(ob)
         data["observation"].append(ob)
         action, agentinfo = agent.act(ob)
         data["action"].append(action)
@@ -123,6 +124,8 @@ def rollout(env, agent, max_pathlength):
             data[k].append(v)
         ob,rew,done,envinfo = env.step(action)
         data["reward"].append(rew)
+        rew = agent.rewfilt(rew)
+        data["reward_filt"] = rew
         for (k,v) in envinfo.iteritems():
             data[k].append(v)
         if done:
@@ -132,12 +135,12 @@ def rollout(env, agent, max_pathlength):
     data["terminated"] = terminated
     return data
 
-def do_rollouts_serial(env, agent, max_pathlength, n_timesteps, seed_iter):
+def do_rollouts_serial(env, agent, timestep_limit, n_timesteps, seed_iter):
     paths = []
     timesteps_sofar = 0
     while True:
         np.random.seed(seed_iter.next())
-        path = rollout(env, agent, max_pathlength)
+        path = rollout(env, agent, timestep_limit)
         paths.append(path)
         timesteps_sofar += pathlength(path)
         if timesteps_sofar > n_timesteps:
@@ -424,14 +427,19 @@ class NnRegression(EzPickle):
 
 
 class NnVf(object):
-    def __init__(self, net, regression_params):
+    def __init__(self, net, timestep_limit, regression_params):
         self.reg = NnRegression(net, **regression_params)
+        self.timestep_limit = timestep_limit
     def predict(self, path):
-        return self.reg.predict(path["observation"])[:,0]
+        ob_no = self.preproc(path["observation"])
+        return self.reg.predict(ob_no)[:,0]
     def fit(self, paths):
-        ob_no = concat([path["observation"] for path in paths])
+        ob_no = concat([self.preproc(path["observation"]) for path in paths], axis=0)
         vtarg_n1 = concat([path["return"] for path in paths]).reshape(-1,1)
         return self.reg.fit(ob_no, vtarg_n1)
+    def preproc(self, ob_no):
+        return concat([ob_no, np.arange(len(ob_no)).reshape(-1,1) / float(self.timestep_limit)], axis=1)
+
 
 class NnCpd(EzPickle):
     def __init__(self, net, probtype, maxiter=25):

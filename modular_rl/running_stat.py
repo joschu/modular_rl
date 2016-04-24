@@ -1,4 +1,5 @@
 import numpy as np
+
 # http://www.johndcook.com/blog/standard_deviation/
 class RunningStat(object):
     def __init__(self, shape):
@@ -23,7 +24,7 @@ class RunningStat(object):
         return self._M
     @property
     def var(self):
-        return self._S/(self._n - 1) if self._n > 1 else np.abs(self._M)
+        return self._S/(self._n - 1) if self._n > 1 else np.square(self._M)
     @property
     def std(self):
         return np.sqrt(self.var)
@@ -31,8 +32,6 @@ class RunningStat(object):
     def shape(self):
         return self._M.shape
     
-
-
 def test_running_stat():
     for shp in ((), (3,), (3,4)):
         li = []
@@ -43,7 +42,7 @@ def test_running_stat():
             li.append(val)
             m = np.mean(li, axis=0)
             assert np.allclose(rs.mean, m)
-            v = np.abs(m) if (len(li) == 1) else np.var(li, ddof=1, axis=0)
+            v = np.square(m) if (len(li) == 1) else np.var(li, ddof=1, axis=0)
             assert np.allclose(rs.var, v)
 
 

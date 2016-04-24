@@ -1,62 +1,345 @@
 
 default_settings:
     snapshot_every: 20
-    max_pathlength: 0
+    timestep_limit: 0
 
+    command: 'cd /root/code/modular-rl; python run_pg.py' 
+    n_iter: 200
+    gamma: 0.995
+    lam: 0.97
+    agent: modular_rl.agentzoo.TrpoAgent
+    max_kl: 0.01
+    cg_damping: 0.1
+    activation: relu
 
-n_runs: 3
+n_runs: 1
 
-tests:
+scripts:
 
+    # ATARI RAM
+    AirRaid-ram-v0:
+        env: AirRaid-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Alien-ram-v0:
+        env: Alien-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Amidar-ram-v0:
+        env: Amidar-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Assault-ram-v0:
+        env: Assault-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Asterix-ram-v0:
+        env: Asterix-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Asteroids-ram-v0:
+        env: Asteroids-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Atlantis-ram-v0:
+        env: Atlantis-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    BankHeist-ram-v0:
+        env: BankHeist-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    BattleZone-ram-v0:
+        env: BattleZone-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    BeamRider-ram-v0:
+        env: BeamRider-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Berzerk-ram-v0:
+        env: Berzerk-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Bowling-ram-v0:
+        env: Bowling-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Breakout-ram-v0:
+        env: Breakout-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Carnival-ram-v0:
+        env: Carnival-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Centipede-ram-v0:
+        env: Centipede-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    ChopperCommand-ram-v0:
+        env: ChopperCommand-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    CrazyClimber-ram-v0:
+        env: CrazyClimber-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Defender-ram-v0:
+        env: Defender-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    DemonAttack-ram-v0:
+        env: DemonAttack-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    DoubleDunk-ram-v0:
+        env: DoubleDunk-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    ElevatorAction-ram-v0:
+        env: ElevatorAction-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Enduro-ram-v0:
+        env: Enduro-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    FishingDerby-ram-v0:
+        env: FishingDerby-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Freeway-ram-v0:
+        env: Freeway-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Frostbite-ram-v0:
+        env: Frostbite-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Gopher-ram-v0:
+        env: Gopher-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Gravitar-ram-v0:
+        env: Gravitar-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    IceHockey-ram-v0:
+        env: IceHockey-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Jamesbond-ram-v0:
+        env: Jamesbond-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    JourneyEscape-ram-v0:
+        env: JourneyEscape-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Kangaroo-ram-v0:
+        env: Kangaroo-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Krull-ram-v0:
+        env: Krull-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    KungFuMaster-ram-v0:
+        env: KungFuMaster-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    MontezumaRevenge-ram-v0:
+        env: MontezumaRevenge-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    MsPacman-ram-v0:
+        env: MsPacman-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    NameThisGame-ram-v0:
+        env: NameThisGame-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Phoenix-ram-v0:
+        env: Phoenix-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Pitfall-ram-v0:
+        env: Pitfall-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Pong-ram-v0:
+        env: Pong-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Pooyan-ram-v0:
+        env: Pooyan-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    PrivateEye-ram-v0:
+        env: PrivateEye-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Qbert-ram-v0:
+        env: Qbert-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Riverraid-ram-v0:
+        env: Riverraid-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    RoadRunner-ram-v0:
+        env: RoadRunner-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Robotank-ram-v0:
+        env: Robotank-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Seaquest-ram-v0:
+        env: Seaquest-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Skiing-ram-v0:
+        env: Skiing-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Solaris-ram-v0:
+        env: Solaris-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    SpaceInvaders-ram-v0:
+        env: SpaceInvaders-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    StarGunner-ram-v0:
+        env: StarGunner-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Tennis-ram-v0:
+        env: Tennis-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    TimePilot-ram-v0:
+        env: TimePilot-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Tutankham-ram-v0:
+        env: Tutankham-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    UpNDown-ram-v0:
+        env: UpNDown-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Venture-ram-v0:
+        env: Venture-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    VideoPinball-ram-v0:
+        env: VideoPinball-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    WizardOfWor-ram-v0:
+        env: WizardOfWor-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    YarsRevenge-ram-v0:
+        env: YarsRevenge-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+    Zaxxon-ram-v0:
+        env: Zaxxon-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 40000
+
+    # ALG
+
+    # CLASSIC CTRL
+
+    pendulum:
+        env: Pendulum-v0
+        timesteps_per_batch: 5000
     cartpole:
-        env: CartPole
-        timesteps_per_batch: 10000
+        env: CartPole-v0
+        timesteps_per_batch: 5000
     mountaincar:
-        env: MountainCar
-        timesteps_per_batch: 10000
-    swimmer:
-        env: Swimmer
-        timesteps_per_batch: 10000
+        env: MountainCar-v0
+        timesteps_per_batch: 5000
     acrobot:
-        env: Acrobot
-        timesteps_per_batch: 10000
+        env: Acrobot-v0
+        timesteps_per_batch: 5000
+
+    # mujoco
     ip:
-        env: InvertedPendulum
+        env: InvertedPendulum-v0
         timesteps_per_batch: 5000
     reacher:
-        env: Reacher
-        timesteps_per_batch: 20000
+        env: Reacher-v0
+        timesteps_per_batch: 15000
     idp:
-        env: InvertedDoublePendulum
-        timesteps_per_batch: 25000
+        env: InvertedDoublePendulum-v0
+        timesteps_per_batch: 15000
     hc:
-        env: HalfCheetah
+        env: HalfCheetah-v0
         timesteps_per_batch: 25000
     hopper:
-        env: Hopper
+        env: Hopper-v0
         timesteps_per_batch: 25000
     mjcswimmer:
-        env: MujocoSwimmer
+        env: MujocoSwimmer-v0
         timesteps_per_batch: 25000
     walker:
-        env: Walker2d
+        env: Walker2d-v0
         timesteps_per_batch: 25000
+        n_iter: 500
     ant:
-        env: Ant
+        env: Ant-v0
         timesteps_per_batch: 50000
+        n_iter: 1000
     humanoid:
-        env: Humanoid
+        env: Humanoid-v0
         timesteps_per_batch: 50000
+        n_iter: 1000
+        hid_sizes: "64,64"
 
-cfgs:
-    trpo:
-        command: 'export THEANO_FLAGS=floatX=float64 ; python run_pg.py' 
-        # float64 probably isn't necessary, but I was having numerical problems at one point
-        # it doesn't slow things down much       
-        n_iter: 200
-        gamma: 0.995
-        lam: 0.97
-        agent: modular_rl.agentzoo.TrpoAgent
-        max_kl: 0.01
-        cg_damping: 0.1
-        parallel: 0
+    humanoid-deep:
+        env: Humanoid-v0
+        timesteps_per_batch: 50000
+        n_iter: 1000
+        hid_sizes: "64,64,64"
+    humanoid-wide:
+        env: Humanoid-v0
+        timesteps_per_batch: 50000
+        n_iter: 1000
+        hid_sizes: "128,128"
+    humanoid-tanh:
+        env: Humanoid-v0
+        timesteps_per_batch: 50000
+        n_iter: 1000
+        nonlinearity: tanh
+
+    pendulum-small:
+        env: Pendulum-v0
+        hid_sizes: "10,10"
+    pendulum-tanh:
+        env: Pendulum-v0
+        hid_sizes: "10,10"
+        nonlinearity: tanh
+    Breakout-less-samps:
+        env: Breakout-ram-v0
+        n_iter: 1000
+        timesteps_per_batch: 1000
+    Breakout-deep:
+        env: Breakout-ram-v0
+        hid_sizes: "64,64,64"
+        n_iter: 1000
+    Breakout-wide:
+        env: Breakout-ram-v0
+        hid_sizes: "128,128"
+        n_iter: 1000
+    Breakout-tanh:
+        env: Breakout-ram-v0
+        nonlinearity: tanh
+        n_iter: 1000

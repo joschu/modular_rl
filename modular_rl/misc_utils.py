@@ -90,7 +90,8 @@ def comma_sep_ints(s):
     else:
         return []
 
-IDENTITY = lambda x:x
+def IDENTITY(x):
+    return x
 
 GENERAL_OPTIONS = [
     ("seed",int,0,"random seed"),

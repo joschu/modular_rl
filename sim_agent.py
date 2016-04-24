@@ -31,7 +31,7 @@ def animate_rollout(env, agent, n_timesteps,delay=.01):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("hdf")
-    parser.add_argument("--max_pathlength",type=int)
+    parser.add_argument("--timestep_limit",type=int)
     parser.add_argument("--snapname")
     args = parser.parse_args()
 
@@ -52,10 +52,10 @@ def main():
     agent.stochastic=False
     env = cPickle.loads(hdf['env'].value)
 
-    max_pathlength = args.max_pathlength or env.spec.timestep_limit
+    timestep_limit = args.timestep_limit or env.spec.timestep_limit
 
     while True:
-        infos = animate_rollout(env,agent,n_timesteps=max_pathlength, 
+        infos = animate_rollout(env,agent,n_timesteps=timestep_limit, 
             delay=1.0/env.env.metadata['video.frames_per_second'])
         for (k,v) in infos.items():
             if k.startswith("reward"):

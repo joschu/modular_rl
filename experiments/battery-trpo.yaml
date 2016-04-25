@@ -3,256 +3,201 @@ default_settings:
     snapshot_every: 20
     timestep_limit: 0
 
-    command: 'cd /root/code/modular-rl; python run_pg.py' 
-    n_iter: 200
+    command: 'export THEANO_FLAGS=floatX=float64; cd /root/code/modular-rl; xvfb-run -s "-screen 0 1400x900x24" python run_pg.py' 
     gamma: 0.995
     lam: 0.97
     agent: modular_rl.agentzoo.TrpoAgent
     max_kl: 0.01
     cg_damping: 0.1
-    activation: relu
+    activation: tanh
 
-n_runs: 1
+    n_iter: 250
+
+n_runs: 2
+
+atari_settings: &atari_settings
+    timesteps_per_batch: 40000
 
 scripts:
 
-    # ATARI RAM
+    # # ATARI RAM
     AirRaid-ram-v0:
         env: AirRaid-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Alien-ram-v0:
         env: Alien-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Amidar-ram-v0:
         env: Amidar-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Assault-ram-v0:
         env: Assault-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Asterix-ram-v0:
         env: Asterix-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Asteroids-ram-v0:
         env: Asteroids-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Atlantis-ram-v0:
         env: Atlantis-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     BankHeist-ram-v0:
         env: BankHeist-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     BattleZone-ram-v0:
         env: BattleZone-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     BeamRider-ram-v0:
         env: BeamRider-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Berzerk-ram-v0:
         env: Berzerk-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Bowling-ram-v0:
         env: Bowling-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Breakout-ram-v0:
         env: Breakout-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Carnival-ram-v0:
         env: Carnival-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Centipede-ram-v0:
         env: Centipede-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     ChopperCommand-ram-v0:
         env: ChopperCommand-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     CrazyClimber-ram-v0:
         env: CrazyClimber-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Defender-ram-v0:
         env: Defender-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     DemonAttack-ram-v0:
         env: DemonAttack-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     DoubleDunk-ram-v0:
         env: DoubleDunk-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     ElevatorAction-ram-v0:
         env: ElevatorAction-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Enduro-ram-v0:
         env: Enduro-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     FishingDerby-ram-v0:
         env: FishingDerby-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Freeway-ram-v0:
         env: Freeway-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Frostbite-ram-v0:
         env: Frostbite-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Gopher-ram-v0:
         env: Gopher-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Gravitar-ram-v0:
         env: Gravitar-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     IceHockey-ram-v0:
         env: IceHockey-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Jamesbond-ram-v0:
         env: Jamesbond-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     JourneyEscape-ram-v0:
         env: JourneyEscape-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Kangaroo-ram-v0:
         env: Kangaroo-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Krull-ram-v0:
         env: Krull-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     KungFuMaster-ram-v0:
         env: KungFuMaster-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     MontezumaRevenge-ram-v0:
         env: MontezumaRevenge-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     MsPacman-ram-v0:
         env: MsPacman-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     NameThisGame-ram-v0:
         env: NameThisGame-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Phoenix-ram-v0:
         env: Phoenix-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Pitfall-ram-v0:
         env: Pitfall-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Pong-ram-v0:
         env: Pong-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Pooyan-ram-v0:
         env: Pooyan-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     PrivateEye-ram-v0:
         env: PrivateEye-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Qbert-ram-v0:
         env: Qbert-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Riverraid-ram-v0:
         env: Riverraid-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     RoadRunner-ram-v0:
         env: RoadRunner-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Robotank-ram-v0:
         env: Robotank-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Seaquest-ram-v0:
         env: Seaquest-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Skiing-ram-v0:
         env: Skiing-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Solaris-ram-v0:
         env: Solaris-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     SpaceInvaders-ram-v0:
         env: SpaceInvaders-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     StarGunner-ram-v0:
         env: StarGunner-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Tennis-ram-v0:
         env: Tennis-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     TimePilot-ram-v0:
         env: TimePilot-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Tutankham-ram-v0:
         env: Tutankham-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     UpNDown-ram-v0:
         env: UpNDown-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Venture-ram-v0:
         env: Venture-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     VideoPinball-ram-v0:
         env: VideoPinball-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     WizardOfWor-ram-v0:
         env: WizardOfWor-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     YarsRevenge-ram-v0:
         env: YarsRevenge-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
     Zaxxon-ram-v0:
         env: Zaxxon-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 40000
+        <<: *atari_settings
 
     # ALG
 
@@ -287,59 +232,26 @@ scripts:
     hopper:
         env: Hopper-v0
         timesteps_per_batch: 25000
-    mjcswimmer:
-        env: MujocoSwimmer-v0
+    swimmer:
+        env: Swimmer-v0
         timesteps_per_batch: 25000
     walker:
         env: Walker2d-v0
         timesteps_per_batch: 25000
-        n_iter: 500
     ant:
         env: Ant-v0
         timesteps_per_batch: 50000
-        n_iter: 1000
     humanoid:
         env: Humanoid-v0
         timesteps_per_batch: 50000
-        n_iter: 1000
         hid_sizes: "64,64"
 
     humanoid-deep:
         env: Humanoid-v0
         timesteps_per_batch: 50000
-        n_iter: 1000
         hid_sizes: "64,64,64"
     humanoid-wide:
         env: Humanoid-v0
         timesteps_per_batch: 50000
-        n_iter: 1000
         hid_sizes: "128,128"
-    humanoid-tanh:
-        env: Humanoid-v0
-        timesteps_per_batch: 50000
-        n_iter: 1000
-        nonlinearity: tanh
 
-    pendulum-small:
-        env: Pendulum-v0
-        hid_sizes: "10,10"
-    pendulum-tanh:
-        env: Pendulum-v0
-        hid_sizes: "10,10"
-        nonlinearity: tanh
-    Breakout-less-samps:
-        env: Breakout-ram-v0
-        n_iter: 1000
-        timesteps_per_batch: 1000
-    Breakout-deep:
-        env: Breakout-ram-v0
-        hid_sizes: "64,64,64"
-        n_iter: 1000
-    Breakout-wide:
-        env: Breakout-ram-v0
-        hid_sizes: "128,128"
-        n_iter: 1000
-    Breakout-tanh:
-        env: Breakout-ram-v0
-        nonlinearity: tanh
-        n_iter: 1000

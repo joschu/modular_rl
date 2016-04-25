@@ -8,7 +8,8 @@ from gym.envs import make
 from modular_rl import *
 import argparse, sys, cPickle
 from tabulate import tabulate
-import shutil, os
+import shutil, os, logging
+import gym
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -22,7 +23,7 @@ if __name__ == "__main__":
     mondir = args.outfile + ".dir"
     if os.path.exists(mondir): shutil.rmtree(mondir)
     os.mkdir(mondir)
-    env.monitor.start(mondir, "TRPO", video=True)
+    env.monitor.start(mondir)
     agent_ctor = get_agent_cls(args.agent)
     update_argument_parser(parser, agent_ctor.options)
     args = parser.parse_args()
@@ -32,6 +33,8 @@ if __name__ == "__main__":
     np.random.seed(args.seed)
     agent = agent_ctor(env.observation_space, env.action_space, cfg)
     hdf, diagnostics = prepare_h5_file(args)
+
+    logging.getLogger().setLevel(logging.WARN)
 
     COUNTER = 0
     def callback(stats):

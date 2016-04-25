@@ -14,6 +14,7 @@ def animate_rollout(env, agent, n_timesteps,delay=.01):
     if hasattr(agent,"reset"): agent.reset()
     env.render()
     for i in xrange(n_timesteps):
+        ob = agent.obfilt(ob)
         a, _info = agent.act(ob)
         (ob, rew, done, info) = env.step(a)
         env.render()
@@ -50,13 +51,12 @@ def main():
 
     agent = cPickle.loads(hdf['agent_snapshots'][snapname].value)
     agent.stochastic=False
-    env = cPickle.loads(hdf['env'].value)
 
     timestep_limit = args.timestep_limit or env.spec.timestep_limit
 
     while True:
         infos = animate_rollout(env,agent,n_timesteps=timestep_limit, 
-            delay=1.0/env.env.metadata['video.frames_per_second'])
+            delay=1.0/env.metadata['video.frames_per_second'])
         for (k,v) in infos.items():
             if k.startswith("reward"):
                 print "%s: %f"%(k, np.sum(v))

@@ -70,7 +70,7 @@ def make_deterministic_mlp(ob_space, ac_space, cfg):
     return policy
 
 FILTER_OPTIONS = [
-    ("filter", int, 0, "Whether to do a running average filter of the incoming observations and rewards")
+    ("filter", int, 1, "Whether to do a running average filter of the incoming observations and rewards")
 ]
 
 def make_filters(cfg, ob_space):

@@ -353,7 +353,6 @@ def validate_probtype(probtype, prob):
     assert np.abs(klval - klval_ll) < 3 * klval_ll_stderr # within 3 sigmas
 
 
-
 # ================================================================
 # Value functions 
 # ================================================================
@@ -552,3 +551,12 @@ class ConcatFixedStd(Layer):
         Mean = x
         Std = T.repeat(T.exp(self.logstd)[None, :], Mean.shape[0], axis=0)
         return T.concatenate([Mean, Std], axis=1)
+
+# ================================================================
+# Video monitoring 
+# ================================================================
+
+def VIDEO_NEVER(_):
+    return False
+def VIDEO_ALWAYS(_):
+    return True

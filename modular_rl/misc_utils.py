@@ -98,7 +98,8 @@ GENERAL_OPTIONS = [
     ("metadata",str,"","metadata about experiment"),
     ("outfile",str,"/tmp/a.h5","output file"),
     ("snapshot_every",int,0,"how often to snapshot"),
-    ("load_snapshot",str,"","path to snapshot")
+    ("load_snapshot",str,"","path to snapshot"),
+    ("video",int,1,"whether to record video")
 ]
 
 # ================================================================

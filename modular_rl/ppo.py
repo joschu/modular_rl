@@ -29,7 +29,7 @@ class PpoLbfgsUpdater(EzFlat, EzPickle):
         kl_coeff = T.scalar("kl_coeff")
 
         # Probability distribution:
-        prob_np = stochpol.output
+        prob_np = stochpol.get_output()
         oldprob_np = probtype.prob_variable()
 
         p_n = probtype.likelihood(act_na, prob_np)
@@ -118,7 +118,8 @@ class PpoSgdUpdater(EzPickle):
         ("kl_target", float, 1e-2, ""),
         ("epochs", int, 10, ""),
         ("stepsize", float, 1e-3, ""),
-        ("do_split", int, 0, "do train/test split")
+        ("do_split", int, 0, "do train/test split"),
+        ("kl_cutoff_coeff", float, 1000.0, "")
     ]
 
     def __init__(self, stochpol, usercfg):
@@ -143,7 +144,7 @@ class PpoSgdUpdater(EzPickle):
         # Probability distribution:
         self.loss_names = ["surr", "kl", "ent"]
 
-        prob_np = stochpol.output
+        prob_np = stochpol.get_output()
         oldprob_np = theano.clone(stochpol.get_output(), replace=dict(zipsame(params, old_params)))
         p_n = probtype.likelihood(act_na, prob_np)
         oldp_n = probtype.likelihood(act_na, oldprob_np)
@@ -157,7 +158,7 @@ class PpoSgdUpdater(EzPickle):
         # training
         args = [ob_no, act_na, adv_n]
         surr,kl = train_losses[:2]
-        pensurr = surr + kl_coeff*kl + 1000*(kl>kl_cutoff)*T.square(kl-kl_cutoff)
+        pensurr = surr + kl_coeff*kl + cfg["kl_cutoff_coeff"]*(kl>kl_cutoff)*T.square(kl-kl_cutoff)
         self.train = theano.function([kl_coeff]+args, train_losses, 
             updates=stochpol.get_updates()
             + adam_updates(pensurr, params, learning_rate=cfg.stepsize).items(), **FNOPTS)

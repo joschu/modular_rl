@@ -23,7 +23,7 @@ if __name__ == "__main__":
     mondir = args.outfile + ".dir"
     if os.path.exists(mondir): shutil.rmtree(mondir)
     os.mkdir(mondir)
-    env.monitor.start(mondir)
+    env.monitor.start(mondir, video_callable=None if args.video else VIDEO_NEVER)
     agent_ctor = get_agent_cls(args.agent)
     update_argument_parser(parser, agent_ctor.options)
     args = parser.parse_args()
@@ -33,8 +33,7 @@ if __name__ == "__main__":
     np.random.seed(args.seed)
     agent = agent_ctor(env.observation_space, env.action_space, cfg)
     hdf, diagnostics = prepare_h5_file(args)
-
-    logging.getLogger().setLevel(logging.WARN)
+    gym.logger.setLevel(logging.WARN)
 
     COUNTER = 0
     def callback(stats):

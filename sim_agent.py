@@ -56,7 +56,7 @@ def main():
 
     while True:
         infos = animate_rollout(env,agent,n_timesteps=timestep_limit, 
-            delay=1.0/env.metadata['video.frames_per_second'])
+            delay=1.0/env.metadata.get('video.frames_per_second', 30))
         for (k,v) in infos.items():
             if k.startswith("reward"):
                 print "%s: %f"%(k, np.sum(v))

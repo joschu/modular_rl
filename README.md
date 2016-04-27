@@ -14,9 +14,9 @@ Dependencies:
 - keras (1.0.1)
 - theano (0.8.2)
 - tabulate
-- h5py
 - numpy
 - scipy
+
 
 To run the algorithms implemented here, you should put `modular_rl` on your `PYTHONPATH`, or run the scripts (e.g. `run_pg.py`) from this directory.
 

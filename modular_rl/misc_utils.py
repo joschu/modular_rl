@@ -1,5 +1,5 @@
 from __future__ import print_function
-import h5py, atexit, numpy as np, scipy, sys, os.path as osp
+import atexit, numpy as np, scipy, sys, os.path as osp
 from collections import defaultdict
 
 # ================================================================
@@ -97,6 +97,7 @@ GENERAL_OPTIONS = [
     ("seed",int,0,"random seed"),
     ("metadata",str,"","metadata about experiment"),
     ("outfile",str,"/tmp/a.h5","output file"),
+    ("use_hdf",int,0,"whether to make an hdf5 file with results and snapshots"),
     ("snapshot_every",int,0,"how often to snapshot"),
     ("load_snapshot",str,"","path to snapshot"),
     ("video",int,1,"whether to record video")
@@ -112,6 +113,7 @@ def prepare_h5_file(args):
     fname = args.outfile or outfile_default
     if osp.exists(fname) and fname != outfile_default:
         raw_input("output file %s already exists. press enter to continue. (exit with ctrl-C)"%fname)
+    import h5py
     hdf = h5py.File(fname,"w")
     hdf.create_group('params')
     for (param,val) in args.__dict__.items():

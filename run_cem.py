@@ -21,7 +21,7 @@ if __name__ == "__main__":
     mondir = args.outfile + ".dir"
     if os.path.exists(mondir): shutil.rmtree(mondir)
     os.mkdir(mondir)
-    env.monitor.start(mondir, "TRPO")
+    env.monitor.start(mondir)
     agent_ctor = get_agent_cls(args.agent)
     update_argument_parser(parser, agent_ctor.options)
     update_argument_parser(parser, CEM_OPTIONS)

@@ -6,6 +6,7 @@ This script runs the cross-entropy method
 from gym.envs import make
 from modular_rl import *
 import argparse, sys, cPickle, shutil
+import gym, logging
 
 from tabulate import tabulate
 
@@ -21,7 +22,7 @@ if __name__ == "__main__":
     mondir = args.outfile + ".dir"
     if os.path.exists(mondir): shutil.rmtree(mondir)
     os.mkdir(mondir)
-    env.monitor.start(mondir)
+    env.monitor.start(mondir,video_callable=None if args.video else VIDEO_NEVER)
     agent_ctor = get_agent_cls(args.agent)
     update_argument_parser(parser, agent_ctor.options)
     update_argument_parser(parser, CEM_OPTIONS)
@@ -33,6 +34,8 @@ if __name__ == "__main__":
 
     if args.timestep_limit == 0: 
         args.timestep_limit = env_spec.timestep_limit
+
+    gym.logger.setLevel(logging.WARN)
 
     COUNTER = 0
     def callback(stats):

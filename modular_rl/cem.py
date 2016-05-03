@@ -35,7 +35,8 @@ def cem(f,th_mean,batch_size,n_iter,elite_frac, initial_std=1.0, extra_std=0.0, 
 
     for iteration in xrange(n_iter):
 
-        extra_var_multiplier = max((1.0-iteration/std_decay_time),0) # Multiply "extra variance" by this factor
+        extra_var_multiplier = max((1.0-iteration/float(std_decay_time)),0) # Multiply "extra variance" by this factor
+        print "extra var", extra_var_multiplier
         sample_std = np.sqrt(th_std + np.square(extra_std) * extra_var_multiplier)
 
         ths = np.array([th_mean + dth for dth in  sample_std[None,:]*np.random.randn(batch_size, th_mean.size)])

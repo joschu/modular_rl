@@ -75,11 +75,11 @@ FILTER_OPTIONS = [
 
 def make_filters(cfg, ob_space):
     if cfg["filter"]:
-        obfilter = ZFilter(ob_space.shape, clip=5)
-        rewfilter = ZFilter((), demean=False, clip=10)
+        obfilter = WhitenFilter(ob_space.shape, clip=5)
+        rewfilter = WhitenFilter((), demean=False, clip=10)
     else:
-        obfilter = IDENTITY
-        rewfilter = IDENTITY
+        obfilter = IdentityFilter()
+        rewfilter = IdentityFilter()
     return obfilter, rewfilter
 
 
@@ -101,6 +101,13 @@ class AgentWithPolicy(object):
         return self.obfilter(ob)
     def rewfilt(self, rew):
         return self.rewfilter(rew)
+
+    def process_paths(self, paths):
+        # Called after each batch of rollouts
+        # Could batch this
+        for path in paths:
+            for observation in path['raw_observation']:
+                self.obfilter.update(observation)
 
 class DeterministicAgent(AgentWithPolicy):
     options = MLP_OPTIONS + FILTER_OPTIONS

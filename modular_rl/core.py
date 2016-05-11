@@ -70,6 +70,7 @@ PG_OPTIONS = [
     ("timesteps_per_batch", int, 10000, ""),
     ("gamma", float, 0.99, "discount"),
     ("lam", float, 1.0, "lambda parameter from generalized advantage estimation"),
+    ("transform_image", bool, False, "Whether we should downsize / greyscale / flatten the obs (for images)"),
 ]
 
 def run_policy_gradient_algorithm(env, agent, usercfg=None, callback=None):

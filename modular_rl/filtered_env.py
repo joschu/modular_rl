@@ -1,5 +1,6 @@
 from gym import Env, spaces
 import numpy as np
+import scipy
 
 class FilteredEnv(Env): #pylint: disable=W0223
     def __init__(self, env, ob_filter, rew_filter):
@@ -25,3 +26,24 @@ class FilteredEnv(Env): #pylint: disable=W0223
 
     def _render(self, *args, **kw):
         self.env.render(*args, **kw)
+
+
+def rgb2gray(rgb):
+    r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
+    gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
+    return gray
+
+class RGBImageToVector(object):
+    def __init__(self, out_width=40, out_height=40):
+        self.out_width = out_width
+        self.out_height = out_height
+
+    def __call__(self, obs):
+        # obs is an M x N x 3 rgb image, want an (out_width x out_height,) vector
+        grayscale = rgb2gray(obs)
+        downsample = scipy.misc.imresize(grayscale, (self.out_width, self.out_height))
+        flatten = downsample.reshape(self.out_width * self.out_height)
+        return flatten
+
+    def output_shape(self, x):
+        return self.out_width * self.out_height

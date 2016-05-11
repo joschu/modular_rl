@@ -77,9 +77,6 @@ def run_policy_gradient_algorithm(env, agent, usercfg=None, callback=None):
     cfg.update(usercfg)
     print "policy gradient config", cfg
 
-    if cfg["parallel"]:
-        raise NotImplementedError
-
     tstart = time.time()
     seed_iter = itertools.count()
 
@@ -100,13 +97,53 @@ def run_policy_gradient_algorithm(env, agent, usercfg=None, callback=None):
         stats["TimeElapsed"] = time.time() - tstart
         if callback: callback(stats)
 
-def get_paths(env, agent, cfg, seed_iter):
-    if cfg["parallel"]:
-        raise NotImplementedError
-    else:
-        paths = do_rollouts_serial(env, agent, cfg["timestep_limit"], cfg["timesteps_per_batch"], seed_iter)
-    return paths
+def parallel_rollout_worker((env, agent, ts_limit, ts_batch, seed)):
+    try:
+        return do_rollouts_serial(env, agent, ts_limit, ts_batch, seed)
+    except Exception, e:
+        print("Exception in rollout worker: %s" % e)
+        import traceback; traceback.print_exc()
+        raise
 
+def get_paths(env, agent, cfg, seed_iter):
+    paths = []
+    if cfg["parallel"]:
+        start_time = time.time()
+
+        from multiprocessing import Pool
+        num_processes = int(cfg["parallel"])
+        pool = Pool(processes=num_processes)
+
+        # very simple scheme, split work evenly among pool workers (queue would be better)
+        try:
+            def callback(result):
+                paths.extend([path for paths_list in result for path in paths_list])
+            result = pool.map_async(
+                parallel_rollout_worker,
+                [(env,
+                  agent,
+                  cfg['timestep_limit'],
+                  cfg['timesteps_per_batch'] / num_processes,
+                  seed_iter.next()
+                  ) for _ in range(num_processes)],
+                callback=callback,
+                )
+            result.wait(1e5)
+        except KeyboardInterrupt:
+            pool.terminate()
+            raise
+        except Exception:
+            pool.terminate()
+            raise
+        else:
+            pool.close()
+        finally:
+            pool.join()
+
+        print("Time elapsed (%d workers): %.2f" % (num_processes, time.time() - start_time))
+    else:
+        paths = do_rollouts_serial(env, agent, cfg["timestep_limit"], cfg["timesteps_per_batch"], seed_iter.next())
+    return paths
 
 def rollout(env, agent, timestep_limit):
     """
@@ -135,11 +172,11 @@ def rollout(env, agent, timestep_limit):
     data["terminated"] = terminated
     return data
 
-def do_rollouts_serial(env, agent, timestep_limit, n_timesteps, seed_iter):
+def do_rollouts_serial(env, agent, timestep_limit, n_timesteps, seed):
     paths = []
     timesteps_sofar = 0
     while True:
-        np.random.seed(seed_iter.next())
+        np.random.seed(seed)
         path = rollout(env, agent, timestep_limit)
         paths.append(path)
         timesteps_sofar += pathlength(path)

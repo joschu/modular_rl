@@ -3,18 +3,22 @@ import numpy as np
 import scipy
 
 class FilteredEnv(Env): #pylint: disable=W0223
-    def __init__(self, env, ob_filter, rew_filter):
+    def __init__(self, env, ob_filter, action_filter, rew_filter):
         self.env = env
         self.ob_filter = ob_filter
+        self.action_filter = action_filter
         self.rew_filter = rew_filter
 
         ob_space = self.env.observation_space
         shape = self.ob_filter.output_shape(ob_space)
         self.observation_space = spaces.Box(-np.inf, np.inf, shape)
-        self.action_space = self.env.action_space
+
+        ac_space = self.env.action_space
+        n = self.action_filter.discrete_actions(ac_space)
+        self.action_space = spaces.Discrete(n)
 
     def _step(self, ac):
-        ob, rew, done, info = self.env.step(ac)
+        ob, rew, done, info = self.env.step(self.action_filter(ac))
         nob = self.ob_filter(ob) if self.ob_filter else ob
         nrew = self.rew_filter(rew) if self.rew_filter else rew
         info["reward_raw"] = rew
@@ -47,3 +51,20 @@ class RGBImageToVector(object):
 
     def output_shape(self, x):
         return self.out_width * self.out_height
+
+class DiscreteToHighLow(object):
+    """
+    do this in the simplest possible way where we only send max and min actions
+    """
+    def __init__(self):
+        self.actions = 0
+
+    def discrete_actions(self, high_low):
+        self.actions = high_low.matrix.shape[0]
+        self.matrix = high_low.matrix
+        return 2 ** self.actions
+
+    def __call__(self, ac):
+        # This converts an integer to a bitmask of which actions should be maxed
+        bitmask = "{0:b}".format(ac).ljust(self.actions, "0")
+        return np.matrix([self.matrix[i, int(bit)] for i, bit in enumerate(bitmask)]).T

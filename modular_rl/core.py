@@ -71,6 +71,7 @@ PG_OPTIONS = [
     ("gamma", float, 0.99, "discount"),
     ("lam", float, 1.0, "lambda parameter from generalized advantage estimation"),
     ("transform_image", bool, False, "Whether we should downsize / greyscale / flatten the obs (for images)"),
+    ("transform_highlow", bool, False, "Transforms action space from HighLow to Discrete"),
 ]
 
 def run_policy_gradient_algorithm(env, agent, usercfg=None, callback=None):

@@ -31,8 +31,13 @@ if __name__ == "__main__":
         args.timestep_limit = env_spec.timestep_limit
     cfg = args.__dict__
     np.random.seed(args.seed)
-    if cfg['transform_image']:
-        env = FilteredEnv(env, RGBImageToVector(), IDENTITY)
+
+    # observation and action transforms (e.g. for doom)
+    obs_filter = IDENTITY if not cfg['transform_image'] else RGBImageToVector()
+    act_filter = IDENTITY if not cfg['transform_highlow'] else DiscreteToHighLow()
+    if obs_filter != IDENTITY or act_filter != IDENTITY:
+        env = FilteredEnv(env, obs_filter, act_filter, IDENTITY)
+
     agent = agent_ctor(env.observation_space, env.action_space, cfg)
     if args.use_hdf:
         hdf, diagnostics = prepare_h5_file(args)

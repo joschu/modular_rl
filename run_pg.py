@@ -13,7 +13,7 @@ import gym
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    update_argument_parser(parser, GENERAL_OPTIONS)    
+    update_argument_parser(parser, GENERAL_OPTIONS)
     parser.add_argument("--env",required=True)
     parser.add_argument("--agent",required=True)
     parser.add_argument("--plot",action="store_true")
@@ -27,10 +27,17 @@ if __name__ == "__main__":
     agent_ctor = get_agent_cls(args.agent)
     update_argument_parser(parser, agent_ctor.options)
     args = parser.parse_args()
-    if args.timestep_limit == 0: 
-        args.timestep_limit = env_spec.timestep_limit    
+    if args.timestep_limit == 0:
+        args.timestep_limit = env_spec.timestep_limit
     cfg = args.__dict__
     np.random.seed(args.seed)
+
+    # observation and action transforms (e.g. for doom)
+    obs_filter = IDENTITY if not cfg['transform_image'] else RGBImageToVector()
+    act_filter = IDENTITY if not cfg['transform_highlow'] else DiscreteToHighLow()
+    if obs_filter != IDENTITY or act_filter != IDENTITY:
+        env = FilteredEnv(env, obs_filter, act_filter, IDENTITY)
+
     agent = agent_ctor(env.observation_space, env.action_space, cfg)
     if args.use_hdf:
         hdf, diagnostics = prepare_h5_file(args)
@@ -39,7 +46,7 @@ if __name__ == "__main__":
     COUNTER = 0
     def callback(stats):
         global COUNTER
-        COUNTER += 1  
+        COUNTER += 1
         # Print stats
         print "*********** Iteration %i ****************" % COUNTER
         print tabulate(filter(lambda (k,v) : np.asarray(v).size==1, stats.items())) #pylint: disable=W0110
@@ -51,7 +58,7 @@ if __name__ == "__main__":
                 else:
                     assert val.ndim == 1
                     diagnostics[stat].extend(val)
-            if args.snapshot_every and ((COUNTER % args.snapshot_every==0) or (COUNTER==args.n_iter)): 
+            if args.snapshot_every and ((COUNTER % args.snapshot_every==0) or (COUNTER==args.n_iter)):
                 hdf['/agent_snapshots/%0.4i'%COUNTER] = np.array(cPickle.dumps(agent,-1))
         # Plot
         if args.plot:
@@ -63,5 +70,5 @@ if __name__ == "__main__":
         hdf['env_id'] = env_spec.id
         try: hdf['env'] = np.array(cPickle.dumps(env, -1))
         except Exception: print "failed to pickle env" #pylint: disable=W0703
-    
+
     env.monitor.close()

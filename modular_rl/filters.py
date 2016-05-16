@@ -14,6 +14,41 @@ class Composition(object):
             out = f.output_shape(out)
         return out
 
+class IdentityFilter(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, x):
+        return x
+
+    def update(self, xs):
+        pass
+
+class WhitenFilter(object):
+    """
+    y = (x-mean)/std
+    using running estimates of mean,std
+    """
+
+    def __init__(self, shape, demean=True, destd=True, clip=10.0):
+        self.demean = demean
+        self.destd = destd
+        self.clip = clip
+
+        self.rs = RunningStat(shape)
+
+    def __call__(self, x):
+        if self.demean:
+            x = x - self.rs.mean
+        if self.destd:
+            x = x / (self.rs.std+1e-8)
+        if self.clip:
+            x = np.clip(x, -self.clip, self.clip)
+        return x
+
+    def update(self, x):
+        self.rs.push(x)
+
 class ZFilter(object):
     """
     y = (x-mean)/std

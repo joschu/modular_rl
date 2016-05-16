@@ -67,4 +67,4 @@ class DiscreteToHighLow(object):
     def __call__(self, ac):
         # This converts an integer to a bitmask of which actions should be maxed
         bitmask = "{0:b}".format(ac).ljust(self.actions, "0")
-        return np.matrix([self.matrix[i, int(bit)] for i, bit in enumerate(bitmask)]).T
+        return np.array([self.matrix[i, int(bit)] for i, bit in enumerate(bitmask)])

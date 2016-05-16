@@ -131,6 +131,10 @@ def get_paths(env, agent, cfg, seed_iter):
                 callback=callback,
                 )
             result.wait(1e5)
+            # If all the subprocesses errored, reraise exception by calling get.
+            # (doesn't handle the case where some of the processes succeed)
+            if not paths:
+                result.get()
         except KeyboardInterrupt:
             pool.terminate()
             raise

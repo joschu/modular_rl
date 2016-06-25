@@ -92,7 +92,6 @@ class TrpoUpdater(EzFlat, EzPickle):
                 return self.compute_losses(*args)[0] #pylint: disable=W0640
             success, theta = linesearch(loss, thprev, fullstep, neggdotstepdir/lm)
             print "success", success
-            theta = thprev + fullstep
             self.set_params_flat(theta)
         losses_after = self.compute_losses(*args)
 

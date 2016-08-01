@@ -157,6 +157,7 @@ def unflatten(vec, shapes):
         size = np.prod(shape)
         arr = vec[i:i+size].reshape(shape)
         arrs.append(arr)
+        i += size
     return arrs
 
 class EzPickle(object):

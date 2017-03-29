@@ -43,7 +43,7 @@ def cem(f,th_mean,batch_size,n_iter,elite_frac, initial_std=1.0, extra_std=0.0, 
         if pool is None: ys = np.array(map(f, ths))
         else: ys = np.array(pool.map(f, ths))
         assert ys.ndim==1
-        elite_inds = ys.argsort()[-n_elite:]
+        elite_inds = ys.argsort()[::-1][:n_elite]
         elite_ths = ths[elite_inds]
         th_mean = elite_ths.mean(axis=0)
         th_std = elite_ths.var(axis=0)

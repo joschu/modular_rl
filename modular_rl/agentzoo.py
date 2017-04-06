@@ -33,12 +33,12 @@ def make_mlps(ob_space, ac_space, cfg):
         net.add(Dense(layeroutsize, activation=cfg["activation"], **inshp))
     if isinstance(ac_space, Box):
         net.add(Dense(outdim))
-        Wlast = net.layers[-1].W
+        Wlast = net.layers[-1].kernel
         Wlast.set_value(Wlast.get_value(borrow=True)*0.1)
         net.add(ConcatFixedStd())
     else:
         net.add(Dense(outdim, activation="softmax"))
-        Wlast = net.layers[-1].W
+        Wlast = net.layers[-1].kernel
         Wlast.set_value(Wlast.get_value(borrow=True)*0.1)
     policy = StochPolicyKeras(net, probtype)
     vfnet = Sequential()
@@ -64,7 +64,7 @@ def make_deterministic_mlp(ob_space, ac_space, cfg):
         net.add(Dense(layeroutsize, activation="tanh", **inshp))
     inshp = dict(input_shape=ob_space.shape) if len(hid_sizes) == 0 else {}
     net.add(Dense(outdim, **inshp))
-    Wlast = net.layers[-1].W
+    Wlast = net.layers[-1].kernel
     Wlast.set_value(Wlast.get_value(borrow=True)*0.1)
     policy = StochPolicyKeras(net, probtype)
     return policy

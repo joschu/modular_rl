@@ -11,8 +11,8 @@ This library is written in a modular way to allow for sharing code between TRPO 
 
 Dependencies:
 
-- keras (1.0.1)
-- theano (0.8.2)
+- keras (2.0.2)
+- theano (0.9.0)
 - tabulate
 - numpy
 - scipy
